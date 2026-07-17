@@ -1,0 +1,215 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, SITE } from '../consts';
+
+const banners = [
+  ['01','新會員註冊 贈送免費彩金88'],['02','首存連續3天 立即領取200%獎勵'],['03','首存第30天 贈送高達18,888'],
+  ['04','首存第7天 贈送高達15,888'],['05','黃金會員日 每月8號 狂撒獎金8,800萬'],['06','VIP永不降級 每月領取288,888'],
+  ['07','每天簽到 每天領取獎勵'],['08','每天返水3% 不看等級無上限'],['09','神秘彩金 每日領獎不定時派發'],
+  ['10','真人連贏再送 高達888,888'],['11','真人每天投注 彩金高達6,888'],['12','真人救援金 每天返3%'],
+  ['13','電子·捕魚·棋牌 每日投注彩金高達2,888'],['14','電子·捕魚·棋牌 救援金5%'],['15','電子·捕魚·棋牌 贏再送2%'],
+  ['16','體育每天投注 彩金高達2,888'],['17','體育連贏彩金 高達8,888'],['18','體育救援金 高達15,888'],
+  ['19','EXpay錢包 送88體驗金'],['20','虛擬幣存取款 尊享三重豪禮'],['21','極速ATM存款 每筆贈0.5%'],
+  ['22','預約取款 額外加送1%'],['23','EXpay錢包 操作指南'],['24','自己當代理賺錢 每週賺500,000'],
+  ['25','BNG電子 獎金雨活動'],
+];
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+const fmt = (d) => d.toISOString().slice(0, 10);
+const canonical = SITE.url + '/';
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  alternateName: SITE.brand,
+  url: SITE.url,
+  logo: SITE.url + '/images/banner-01.webp',
+  description: `${SITE.name}官方平台，提供體育投注、真人視訊、電子、捕魚與棋牌等多元遊戲。`,
+  contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', url: SITE.lineUrl, availableLanguage: ['zh-Hant'] },
+  sameAs: [SITE.lineUrl],
+};
+---
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T8娛樂城｜體育投注・真人・電子捕魚棋牌・每日優惠</title>
+<meta name="description" content="T8娛樂城提供體育投注、真人、電子捕魚棋牌等多元遊戲，新會員註冊送 88 體驗金，每日簽到領獎、首存加碼、EXpay 與虛擬幣快速存取款，24 小時客服全年不打烊。">
+<link rel="canonical" href={canonical}>
+<script type="application/ld+json" set:html={JSON.stringify(orgLd)}></script>
+<link rel="alternate" type="application/rss+xml" title={SITE.blogTitle} href="/rss.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style is:global>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F2F5F9;font-family:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#22314A}
+  a{color:#0A5FB4;text-decoration:none}a:hover{color:#0A5FB4}
+  .cinzel{font-family:Montserrat,'Noto Sans TC',sans-serif}
+  @keyframes you-mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .hero-wrap{position:relative;width:100%;aspect-ratio:1920/700;border-radius:20px;overflow:hidden;box-shadow:0 18px 50px rgba(10,60,120,.22);border:1px solid rgba(36,72,108,.3);background:#E3ECF6}
+  .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s;z-index:1}
+  .slide.active{opacity:1;z-index:2}
+  .slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-count{position:absolute;top:14px;left:16px;z-index:15;padding:5px 13px;border-radius:99px;background:rgba(58,48,32,.55);color:#D6E8FA;font-family:Montserrat,'Noto Sans TC',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px}
+  .hero-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,.85);color:#0A5FB4;font-size:20px;box-shadow:0 3px 12px rgba(0,0,0,.15)}
+  .hero-btn:hover{background:#fff}.hero-prev{left:16px}.hero-next{right:16px}
+  .hero-dots{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:center;flex-wrap:wrap;gap:8px;z-index:20}
+  .hero-dots button{height:8px;width:8px;border-radius:99px;border:none;cursor:pointer;padding:0;background:rgba(10,60,120,.35);box-shadow:0 1px 4px rgba(0,0,0,.25);transition:all .3s}
+  .hero-dots button.active{width:26px;background:#0A84E4}
+  .cat-tile{display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 18px;border-radius:18px;background:linear-gradient(180deg,#fff,#EEF3F9);border:1px solid rgba(36,72,108,.28);box-shadow:0 6px 20px rgba(10,60,120,.1);transition:all .2s}
+  .cat-tile:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(10,60,120,.22);border-color:rgba(36,72,108,.6)}
+  .cat-ic{width:92px;height:92px;display:flex;align-items:center;justify-content:center}
+  .cat-ic img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(10,60,120,.25))}
+  .cta-btn{display:inline-block;padding:16px 46px;border-radius:12px;font-size:18px;font-weight:800;letter-spacing:1px;color:#0A5FB4;background:#fff;box-shadow:0 10px 26px rgba(10,60,120,.3);transition:all .18s}
+  .cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(10,60,120,.38);color:#0A5FB4}
+  .p-card{display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:#fff;border:1px solid rgba(36,72,108,.28);box-shadow:0 6px 20px rgba(10,60,120,.1);transition:all .2s}
+  .p-card:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(10,60,120,.2);border-color:rgba(36,72,108,.55)}
+  .p-card .th{aspect-ratio:16/9;overflow:hidden}.p-card .th img{width:100%;height:100%;object-fit:cover;display:block}
+  .chip{align-self:flex-start;font-size:12px;font-weight:700;color:#17233A;background:linear-gradient(135deg,#D6E8FA,#3E7AC4);padding:4px 12px;border-radius:99px}
+  @media (max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)!important}.service-grid{grid-template-columns:repeat(2,1fr)!important}.news-grid{grid-template-columns:1fr!important}h2{font-size:30px!important}}
+  @media (max-width:600px){ .hero-pad{ padding:12px 8px 14px !important; } .hero-wrap{ border-radius:12px !important; } .hero-btn{ width:34px !important; height:34px !important; font-size:16px !important; } #games{ padding:40px 14px 4px !important; } h2{ font-size:24px !important; } .cat-grid{ gap:12px !important; } .cat-tile{ padding:16px 8px !important; gap:7px !important; border-radius:14px !important; } .cat-tile > span:first-child{ width:66px !important; height:66px !important; } .cat-tile > span:nth-child(2){ font-size:14.5px !important; } .cat-tile .cinzel{ font-size:10px !important; letter-spacing:1px !important; } }
+</style>
+</head>
+<body>
+<div style="min-height:100vh">
+
+  <SiteHeader />
+
+  <section style="background:linear-gradient(180deg,#EEF3F9,#E3ECF6)" aria-label="主視覺輪播">
+    <div class="hero-pad" style="max-width:1440px; margin:0 auto; padding:28px 32px 24px">
+      <div class="hero-wrap" id="hero">
+        {banners.map(([n, alt], i) => (
+          <div class={`slide${i === 0 ? ' active' : ''}`}>
+            <img src={`/images/banner-${n}.webp`} width="1920" height="700" loading={i === 0 ? 'eager' : 'lazy'} alt={`T8娛樂城 ${alt}`} />
+          </div>
+        ))}
+        <div class="hero-count"><span id="heroCur">01</span> / 25</div>
+        <button class="hero-btn hero-prev" id="heroPrev" aria-label="上一張">‹</button>
+        <button class="hero-btn hero-next" id="heroNext" aria-label="下一張">›</button>
+        <div class="hero-dots" id="heroDots" role="tablist" aria-label="輪播選擇"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#fff; border-top:1px solid rgba(36,72,108,.2); border-bottom:1px solid rgba(36,72,108,.2)" aria-label="最新公告">
+    <div style="max-width:1440px; margin:0 auto; padding:0 32px; display:flex; align-items:center; gap:16px; height:58px">
+      <div style="flex:none; display:flex; align-items:center; gap:8px; padding:7px 16px; border-radius:99px; background:linear-gradient(135deg,#3CB4FC,#0A84E4); color:#fff; font-weight:700; font-size:14px; box-shadow:0 3px 10px rgba(10,132,228,.35)"><span style="width:6px;height:6px;border-radius:50%;background:#fff;display:block"></span> 最新公告</div>
+      <div style="position:relative; flex:1; overflow:hidden; -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent); mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)">
+        <div style="display:inline-flex; white-space:nowrap; animation:you-mq 32s linear infinite">
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>新會員註冊即送 88 體驗金，簽到再領每日獎勵</span>
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>首存最高加碼 18,888，存越多送越多</span>
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>EXpay 與虛擬幣極速存取款，每筆再享回饋</span>
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>新會員註冊即送 88 體驗金，簽到再領每日獎勵</span>
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>首存最高加碼 18,888，存越多送越多</span>
+          <span style="display:inline-flex; align-items:center; gap:9px; padding:0 30px; font-size:15px; color:#2C3E5C; font-weight:500"><i style="width:5px;height:5px;border-radius:50%;background:#3CB4FC;display:inline-block"></i>EXpay 與虛擬幣極速存取款，每筆再享回饋</span>
+        </div>
+      </div>
+      <a href="/promotions/" style="flex:none; font-size:14px; font-weight:600; color:#0A5FB4; padding:6px 12px; border-radius:8px">更多 ›</a>
+    </div>
+  </section>
+
+  <section id="games" style="max-width:1440px; margin:0 auto; padding:72px 32px 12px; text-align:center">
+    <p class="cinzel" style="font-size:15px; letter-spacing:3px; margin:0 0 6px; color:#5B7FA6">TOP GAMES</p>
+    <h2 style="font-size:42px; font-weight:900; margin:0 0 10px; letter-spacing:2px">熱門遊戲分類</h2>
+    <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:44px">
+      <span style="width:60px; height:2px; background:linear-gradient(90deg,transparent,#3CB4FC)"></span><span style="color:#0A5FB4">◆</span><span style="width:60px; height:2px; background:linear-gradient(90deg,#3CB4FC,transparent)"></span>
+    </div>
+    <div class="cat-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px">
+      {[['sports','體育投注','SPORTS'],['live','真人視訊','LIVE'],['slots','電子遊戲','SLOTS'],['fishing','捕魚遊戲','FISHING'],['poker','棋牌遊戲','POKER'],['lottery','彩票遊戲','LOTTERY'],['esports','電競投注','ESPORTS'],['all','全部遊戲','ALL GAMES']].map(([g,zh,en]) => (
+        <a href="#" class="cat-tile">
+          <span class="cat-ic"><img src={`/images/cat-${g}.webp`} alt={`T8娛樂城 ${zh}`} width="184" height="184" loading="lazy" /></span>
+          <span style="font-size:18px; font-weight:700; color:#22314A">{zh}</span>
+          <span class="cinzel" style="font-size:12px; letter-spacing:1.5px; color:#7E8CA3">{en}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ===== 最新文章（部落格自動帶入）===== -->
+  <section style="max-width:1440px; margin:0 auto; padding:72px 32px 8px; text-align:center">
+    <p class="cinzel" style="font-size:15px; letter-spacing:3px; margin:0 0 6px; color:#5B7FA6">LATEST POSTS</p>
+    <h2 style="font-size:42px; font-weight:900; margin:0 0 10px; letter-spacing:2px">最新文章</h2>
+    <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:44px">
+      <span style="width:60px; height:2px; background:linear-gradient(90deg,transparent,#3CB4FC)"></span><span style="color:#0A5FB4">◆</span><span style="width:60px; height:2px; background:linear-gradient(90deg,#3CB4FC,transparent)"></span>
+    </div>
+    <div class="news-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:26px; text-align:left">
+      {posts.map((p) => (
+        <a href={`/blog/${p.slug}/`} class="p-card">
+          <div class="th">{p.data.cover && <img src={p.data.cover} alt={p.data.coverAlt ?? p.data.title} loading="lazy" />}</div>
+          <div style="padding:20px 22px 24px; display:flex; flex-direction:column; gap:10px">
+            <span class="chip">{CATEGORIES[p.data.category]}</span>
+            <h3 style="font-size:19px; font-weight:800; margin:2px 0; color:#22314A; line-height:1.4">{p.data.title}</h3>
+            <p style="font-size:14px; color:#5A6B85; margin:0">{p.data.description}</p>
+            <div style="font-size:13px; color:#7E8CA3; margin-top:4px">{fmt(p.data.pubDate)} · {p.data.author}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div style="margin-top:30px">
+      <a href="/blog/" style="display:inline-block; font-size:15px; font-weight:600; color:#0A5FB4; padding:8px 4px; border-bottom:1px solid rgba(10,95,180,.4)">查看全部文章 →</a>
+    </div>
+  </section>
+
+  <section id="service" style="margin-top:64px; background:linear-gradient(180deg,#eef2f6,#e4ebf2); padding:64px 32px">
+    <div style="max-width:1440px; margin:0 auto; text-align:center">
+      <p class="cinzel" style="font-size:15px; letter-spacing:3px; margin:0 0 6px; color:#8397ab">QUALITY SERVICE</p>
+      <h2 style="font-size:42px; font-weight:900; margin:0 0 10px; letter-spacing:2px; color:#17233A">優質服務</h2>
+      <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:44px">
+        <span style="width:60px; height:2px; background:linear-gradient(90deg,transparent,#0A84E4)"></span><span style="color:#0A84E4">◆</span><span style="width:60px; height:2px; background:linear-gradient(90deg,#0A84E4,transparent)"></span>
+      </div>
+      <div class="service-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:30px">
+        {[['極速','快速出款免等待','FAST PAYOUT'],['加密','資金安全有保障','SECURE'],['全裝置','支援所有裝置','ALL DEVICES'],['24H','全年客服不打烊','SUPPORT']].map(([big,zh,en]) => (
+          <div style="display:flex; flex-direction:column; align-items:center; gap:16px">
+            <span class="cinzel" style="width:128px; height:128px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 50% 40%,#20304A,#0E1626); border:5px solid #3E7AC4; box-shadow:0 10px 26px rgba(40,50,70,.3),inset 0 0 20px rgba(0,0,0,.4); font-size:28px; font-weight:900; color:#D6E8FA">{big}</span>
+            <div><p style="font-size:18px; font-weight:700; color:#17233A; margin:0 0 3px">{zh}</p><p class="cinzel" style="font-size:12px; letter-spacing:1.5px; color:#9fb0c2; margin:0">{en}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" style="position:relative; overflow:hidden; background:linear-gradient(135deg,#3CB4FC,#0A84E4)">
+    <div style="position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1px); background-size:22px 22px; opacity:.6"></div>
+    <div style="position:relative; max-width:900px; margin:0 auto; padding:72px 32px; text-align:center; color:#fff">
+      <p class="cinzel" style="letter-spacing:3px; font-size:14px; margin:0 0 12px; color:rgba(255,255,255,.85)">JOIN T8</p>
+      <h2 style="font-size:40px; font-weight:900; margin:0 0 14px; letter-spacing:1px; text-shadow:0 2px 8px rgba(10,60,120,.25)">立即加入，開啟你的遊戲之旅</h2>
+      <p style="font-size:17px; line-height:1.7; margin:0 auto 32px; max-width:520px; color:rgba(255,255,255,.92)">30 秒完成註冊，新會員登入即享 88 體驗金與每日簽到獎勵。</p>
+      <a href="#" class="cta-btn">免費註冊 ›</a>
+    </div>
+  </section>
+
+  <SiteFooter />
+</div>
+
+<script is:inline>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('#hero .slide'));
+  var dotsWrap = document.getElementById('heroDots');
+  var curEl = document.getElementById('heroCur');
+  var idx = 0, timer = null, N = slides.length;
+  function pad(n){ return String(n+1).padStart(2,'0'); }
+  slides.forEach(function(_,i){
+    var b = document.createElement('button');
+    b.setAttribute('role','tab'); b.setAttribute('aria-label','第 '+(i+1)+' 張');
+    b.addEventListener('click', function(){ go(i); reset(); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+  function go(i){ idx=(i+N)%N; slides.forEach(function(s,j){ s.classList.toggle('active',j===idx); }); dots.forEach(function(d,j){ d.classList.toggle('active',j===idx); }); curEl.textContent=pad(idx); }
+  function next(){ go(idx+1); }
+  function reset(){ clearInterval(timer); timer=setInterval(next,5000); }
+  document.getElementById('heroNext').addEventListener('click', function(){ next(); reset(); });
+  document.getElementById('heroPrev').addEventListener('click', function(){ go(idx-1); reset(); });
+  go(0); reset();
+})();
+</script>
+</body>
+</html>
